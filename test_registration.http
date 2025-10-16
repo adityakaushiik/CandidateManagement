@@ -1,0 +1,137 @@
+### ========================================
+### ADMIN REGISTRATION ENDPOINTS
+### ========================================
+
+### Setup Initial Admin (Public - Only works if no admin exists)
+### Use this endpoint FIRST to create the very first admin user
+POST http://localhost:8000/api/auth/setup/admin
+Content-Type: application/json
+
+{
+  "name": "Super Admin",
+  "email": "admin@example.com",
+  "phone_number": "+1234567890",
+  "role_id": 1,
+  "password": "adminpassword123"
+}
+
+### Register a new Admin (Admin only - requires authentication)
+### Use this endpoint to create additional admin users (requires existing admin token)
+POST http://localhost:8000/api/auth/register/admin
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Second Admin",
+  "email": "admin2@example.com",
+  "phone_number": "+1234567895",
+  "role_id": 1,
+  "password": "adminpassword456"
+}
+
+### ========================================
+### SUB-ADMIN REGISTRATION
+### ========================================
+
+### Register a sub-admin (Admin only - requires authentication)
+POST http://localhost:8000/api/auth/register/sub-admin
+Content-Type: application/json
+Authorization: Bearer YOUR_ADMIN_TOKEN_HERE
+
+{
+  "name": "Jane Admin",
+  "email": "jane.admin@example.com",
+  "phone_number": "+1234567891",
+  "role_id": 2,
+  "password": "adminpassword123"
+}
+
+### ========================================
+### CANDIDATE REGISTRATION
+### ========================================
+
+### Register a new candidate (Public endpoint)
+POST http://localhost:8000/api/auth/register/candidate
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "phone_number": "+1234567890",
+  "role_id": 3,
+  "password": "securepassword123"
+}
+
+### ========================================
+### LOGIN ENDPOINTS
+### ========================================
+
+### Login as admin (to get token for admin/sub-admin registration)
+POST http://localhost:8000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "adminpassword123"
+}
+
+### Login as candidate
+POST http://localhost:8000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "securepassword123"
+}
+
+### ========================================
+### ERROR TEST CASES
+### ========================================
+
+### Test: Try to register sub-admin without authentication (should fail with 401)
+POST http://localhost:8000/api/auth/register/sub-admin
+Content-Type: application/json
+
+{
+  "name": "Unauthorized Admin",
+  "email": "unauthorized@example.com",
+  "phone_number": "+1234567892",
+  "role_id": 2,
+  "password": "password123"
+}
+
+### Test: Try to register admin without authentication (should fail with 401)
+POST http://localhost:8000/api/auth/register/admin
+Content-Type: application/json
+
+{
+  "name": "Unauthorized Admin",
+  "email": "unauthorized@example.com",
+  "phone_number": "+1234567893",
+  "role_id": 1,
+  "password": "password123"
+}
+
+### Test: Try to register candidate with wrong role_id (should fail with 403)
+POST http://localhost:8000/api/auth/register/candidate
+Content-Type: application/json
+
+{
+  "name": "Wrong Role",
+  "email": "wrongrole@example.com",
+  "phone_number": "+1234567894",
+  "role_id": 2,
+  "password": "password123"
+}
+
+### Test: Try to setup admin when one already exists (should fail with 403)
+POST http://localhost:8000/api/auth/setup/admin
+Content-Type: application/json
+
+{
+  "name": "Second Admin Attempt",
+  "email": "admin3@example.com",
+  "phone_number": "+1234567896",
+  "role_id": 1,
+  "password": "adminpassword789"
+}

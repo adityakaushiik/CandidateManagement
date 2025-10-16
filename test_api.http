@@ -1,0 +1,233 @@
+### Health Check
+GET http://localhost:8000/health
+Accept: application/json
+
+### Root
+GET http://localhost:8000/
+Accept: application/json
+
+###############################################
+# SKILLS API
+###############################################
+
+### Create a skill
+POST http://localhost:8000/api/skills/
+Content-Type: application/json
+
+{
+  "name": "Python",
+  "category": "Programming Language",
+  "description": "High-level programming language"
+}
+
+### Bulk create skills
+POST http://localhost:8000/api/skills/bulk
+Content-Type: application/json
+
+[
+  {
+    "name": "JavaScript",
+    "category": "Programming Language",
+    "description": "JavaScript programming language"
+  },
+  {
+    "name": "React",
+    "category": "Frontend Framework",
+    "description": "React.js library"
+  },
+  {
+    "name": "Node.js",
+    "category": "Backend Framework",
+    "description": "Node.js runtime"
+  },
+  {
+    "name": "MongoDB",
+    "category": "Database",
+    "description": "NoSQL database"
+  },
+  {
+    "name": "Docker",
+    "category": "DevOps",
+    "description": "Containerization platform"
+  }
+]
+
+### Get all skills (with pagination)
+GET http://localhost:8000/api/skills/?page=1&page_size=10
+Accept: application/json
+
+### Get all skills filtered by category
+GET http://localhost:8000/api/skills/?category=Programming%20Language
+Accept: application/json
+
+### Search skills
+GET http://localhost:8000/api/skills/?search=python
+Accept: application/json
+
+### Get all skill names (for autocomplete)
+GET http://localhost:8000/api/skills/names
+Accept: application/json
+
+### Get skills by category
+GET http://localhost:8000/api/skills/category/Programming%20Language
+Accept: application/json
+
+### Get a single skill by ID
+GET http://localhost:8000/api/skills/67a1234567890abcdef12345
+Accept: application/json
+
+### Update a skill
+PUT http://localhost:8000/api/skills/67a1234567890abcdef12345
+Content-Type: application/json
+
+{
+  "description": "Updated description for Python",
+  "category": "Programming Language"
+}
+
+### Delete a skill
+DELETE http://localhost:8000/api/skills/67a1234567890abcdef12345
+
+###############################################
+# CANDIDATES API
+###############################################
+
+### Create a candidate
+POST http://localhost:8000/api/candidates/
+Content-Type: application/json
+
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "date_of_birth": "1995-05-15T00:00:00",
+  "phone_number": "+1234567890",
+  "location": "New York, USA",
+  "email": "john.doe@example.com",
+  "skills": ["Python", "JavaScript", "React", "Node.js"],
+  "degree": "Bachelor of Technology",
+  "total_experience": 5.5,
+  "links": {
+    "linkedin": "https://linkedin.com/in/johndoe",
+    "github": "https://github.com/johndoe",
+    "portfolio": "https://johndoe.dev"
+  }
+}
+
+### Create another candidate
+POST http://localhost:8000/api/candidates/
+Content-Type: application/json
+
+{
+  "first_name": "Jane",
+  "last_name": "Smith",
+  "date_of_birth": "1992-08-20T00:00:00",
+  "phone_number": "+9876543210",
+  "location": "San Francisco, USA",
+  "email": "jane.smith@example.com",
+  "skills": ["Python", "Machine Learning", "TensorFlow", "Docker"],
+  "degree": "Master of Science",
+  "total_experience": 7.0,
+  "links": {
+    "linkedin": "https://linkedin.com/in/janesmith",
+    "github": "https://github.com/janesmith"
+  }
+}
+
+### Get all candidates (with pagination)
+GET http://localhost:8000/api/candidates/?page=1&page_size=10
+Accept: application/json
+
+### Get candidates filtered by skill
+GET http://localhost:8000/api/candidates/?skill=Python
+Accept: application/json
+
+### Get candidates filtered by location
+GET http://localhost:8000/api/candidates/?location=New%20York
+Accept: application/json
+
+### Get candidates with minimum experience
+GET http://localhost:8000/api/candidates/?min_experience=5
+Accept: application/json
+
+### Get candidates with multiple filters
+GET http://localhost:8000/api/candidates/?skill=Python&location=USA&min_experience=3&sort_by=total_experience&sort_order=desc
+Accept: application/json
+
+### Get a single candidate by ID
+GET http://localhost:8000/api/candidates/67a1234567890abcdef12345
+Accept: application/json
+
+### Update a candidate
+PUT http://localhost:8000/api/candidates/67a1234567890abcdef12345
+Content-Type: application/json
+
+{
+  "phone_number": "+1234567899",
+  "total_experience": 6.0,
+  "location": "Boston, USA"
+}
+
+### Add a skill to candidate
+POST http://localhost:8000/api/candidates/67a1234567890abcdef12345/skills/MongoDB
+Accept: application/json
+
+### Remove a skill from candidate
+DELETE http://localhost:8000/api/candidates/67a1234567890abcdef12345/skills/MongoDB
+Accept: application/json
+
+### Search candidates by skills (ANY match)
+POST http://localhost:8000/api/candidates/search/by-skills?match_all=false
+Content-Type: application/json
+
+["Python", "JavaScript", "React"]
+
+### Search candidates by skills (ALL match)
+POST http://localhost:8000/api/candidates/search/by-skills?match_all=true
+Content-Type: application/json
+
+["Python", "JavaScript"]
+
+### Delete a candidate
+DELETE http://localhost:8000/api/candidates/67a1234567890abcdef12345
+
+###############################################
+# RESUME PARSER API (Existing)
+###############################################
+
+### Parse Resume
+POST http://localhost:8000/api/resume/parse
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="resume.pdf"
+Content-Type: application/pdf
+
+< ./path/to/resume.pdf
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+MONGODB_URL=mongodb://localhost:27017
+DATABASE_NAME=candidate_management
+
+###############################################
+# AUTH API
+###############################################
+
+### Register candidate
+POST http://localhost:8000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "phone_number": "+1 555 000 1234",
+  "role_id": 3,
+  "password": "SecurePass123!"
+}
+
+### Login
+POST http://localhost:8000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "password": "SecurePass123!"
+}

@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+python-multipart
+spacy
+pdfminer.six
+docx2txt
+PyPDF2
+motor
+pymongo
+pydantic[email]
+python-dotenv
+PyJWT==2.10.1
+passlib
+bcrypt==4.0.1
+pydantic-settings
