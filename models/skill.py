@@ -1,6 +1,5 @@
-from typing import Optional
-
-from pydantic import Field
+from sqlalchemy import Column, String, Text
+from sqlalchemy.orm import relationship
 
 from config.database import Base
 from utils.common_mixin import CommonMixin
@@ -8,6 +7,13 @@ from utils.common_mixin import CommonMixin
 
 class SkillModel(Base, CommonMixin):
     """Base model for Skill"""
+    __tablename__ = "skills"
 
-    name: str = Field(..., min_length=1, max_length=100)
-    description: Optional[str] = Field(None, max_length=500)
+    name = Column(String(100), nullable=False, unique=True, index=True)
+    description = Column(Text, nullable=True)
+
+    # Relationships
+    candidate_skills = relationship(
+        "CandidateSkill",  # The related model class name to establish relationship with CandidateSkill junction table
+        back_populates="skill"  # Name of the reverse relationship attribute in CandidateSkill that references this SkillModel
+    )
