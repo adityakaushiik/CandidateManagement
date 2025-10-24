@@ -1,13 +1,17 @@
-from sqlalchemy import Column, String, DateTime, Float, Text
+from sqlalchemy import Column, String, DateTime, Float, Text, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import relationship
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class CandidateBase(Base, CommonMixin):
     __tablename__ = "candidates"
 
+    user_id = Column(Integer, ForeignKey("users.id") , nullable=False, index=True)
+
+    total_experience_years = Column(Float, nullable=False, server_default="0.0")
     preferred_locations = Column(JSONB, nullable=False, server_default="[]")
     date_of_birth = Column(DateTime, nullable=False)
 
@@ -20,3 +24,9 @@ class CandidateBase(Base, CommonMixin):
     languages = Column(JSONB, nullable=True)
     education = Column(JSONB, nullable=True)
     links = Column(JSONB, nullable=True)
+
+    # Relationships
+    user = relationship(
+        "UserModel",  # The related model class name to establish relationship with UserModel
+        back_populates="candidate"  # Name of the reverse relationship attribute in UserModel that references this CandidateBase
+    )

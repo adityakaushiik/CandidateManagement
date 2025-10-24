@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum as SAEnum, Text
 from sqlalchemy.orm import relationship
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class JoiningTime(Enum):
@@ -24,9 +24,15 @@ class JobModel(Base, CommonMixin):
     description = Column(Text, nullable=True)
 
     # Relationships
-    company = relationship("CompanyModel", back_populates="jobs")
-    user_schedules = relationship("UserScheduleModel", back_populates="job", cascade="all, delete-orphan")
+    company = relationship(
+        "CompanyModel",  # The related model class name to establish relationship with CompanyModel
+        back_populates="jobs"  # Name of the reverse relationship attribute in CompanyModel that references this JobModel
+    )
+    user_schedules = relationship(
+        "UserScheduleModel",  # The related model class name to establish relationship with UserScheduleModel
+        back_populates="job",  # Name of the reverse relationship attribute in UserScheduleModel that references this JobModel
+        cascade="all, delete-orphan"  # Automatically delete all related user schedules when job is deleted, and delete orphaned schedules
+    )
 
     def __repr__(self) -> str:  # pragma: no cover - simple repr
         return f"<Job id={self.id} designation='{self.designation}' company_id={self.company_id}>"
-

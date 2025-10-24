@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import Field
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class SkillModel(Base, CommonMixin):

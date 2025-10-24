@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, ForeignKey, Text
 from sqlalchemy.orm import relationship
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class UserScheduleModel(Base, CommonMixin):
@@ -15,10 +15,17 @@ class UserScheduleModel(Base, CommonMixin):
     notes = Column(Text, nullable=True)
 
     # Relationships
-    user = relationship("UserModel")  # keep one-sided to avoid modifying existing user model
-    job = relationship("JobModel", back_populates="user_schedules")
-    schedule_process = relationship("ScheduleProcessModel", back_populates="user_schedules")
+    user = relationship(
+        "UserModel"  # The related model class name to establish relationship with UserModel (one-sided, no back_populates to avoid modifying existing user model)
+    )
+    job = relationship(
+        "JobModel",  # The related model class name to establish relationship with JobModel
+        back_populates="user_schedules"  # Name of the reverse relationship attribute in JobModel that references this UserScheduleModel
+    )
+    schedule_process = relationship(
+        "ScheduleProcessModel",  # The related model class name to establish relationship with ScheduleProcessModel
+        back_populates="user_schedules"  # Name of the reverse relationship attribute in ScheduleProcessModel that references this UserScheduleModel
+    )
 
     def __repr__(self) -> str:  # pragma: no cover - trivial
         return f"<UserSchedule id={self.id} user_id={self.user_id} job_id={self.job_id} schedule_process_id={self.schedule_process_id}>"
-

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class Experience(Base, CommonMixin):
@@ -15,4 +15,7 @@ class Experience(Base, CommonMixin):
     end_date = Column(DateTime, nullable=True)
     description = Column(Text, nullable=True)
 
-    company = relationship("Company", lazy="joined")
+    company = relationship(
+        "CompanyModel",  # The related model class name to establish relationship with CompanyModel
+        lazy="joined"  # Load strategy - automatically loads related company data in the same query using JOIN
+    )

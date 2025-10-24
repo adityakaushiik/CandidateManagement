@@ -1,7 +1,8 @@
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy import Column, String, Boolean, Integer
+from sqlalchemy.orm import relationship
 
 from config.database import Base
-from models.common_mixin import CommonMixin
+from utils.common_mixin import CommonMixin
 
 
 class UserModel(Base, CommonMixin):
@@ -17,4 +18,17 @@ class UserModel(Base, CommonMixin):
     hashed_password = Column(String, nullable=False)
     profile_picture_url = Column(String, nullable=True)
 
+    role_id = Column(Integer, nullable=False)
+
     blacklisted = Column(Boolean, nullable=True, default=False)
+
+    # Relationships
+    candidate = relationship(
+        "CandidateBase",  # The related model class name to establish relationship with CandidateBase
+        back_populates="user",  # Name of the reverse relationship attribute in CandidateBase that references this UserModel
+        uselist=False  # One-to-one relationship - a user has only one candidate profile
+    )
+    user_schedules = relationship(
+        "UserScheduleModel",  # The related model class name to establish relationship with UserScheduleModel
+        back_populates="user"  # Name of the reverse relationship attribute in UserScheduleModel that references this UserModel
+    )
