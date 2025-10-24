@@ -19,4 +19,3 @@ def needs_rehash(hashed_password: str) -> bool:
         return pwd_context.needs_update(hashed_password)
     except Exception:
         return False
-

@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Dict, Any
-
-from fastapi import HTTPException, Request
-from starlette import status
-from typing_extensions import Optional
+from typing import Dict, Any, Optional, List
 
 import jwt as pyjwt
+from fastapi import HTTPException
+from starlette import status
+
 from config.config import get_settings
 from utils.common_constants import UserRoles
 
@@ -19,7 +18,9 @@ def create_access_token(data: dict, expires_delta_in_days: Optional[float] = 2) 
     expire = datetime.now() + timedelta(days=expires_delta_in_days)
     to_encode.update({"exp": expire})
 
-    return pyjwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    return pyjwt.encode(
+        to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM
+    )
 
 
 def verify_jwt(token: str) -> Dict[str, Any]:
@@ -33,8 +34,7 @@ def verify_jwt(token: str) -> Dict[str, Any]:
             token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
         )
         return payload
-    except pyjwt.InvalidTokenError as e:
-        print(e)
+    except pyjwt.InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
@@ -42,7 +42,9 @@ def verify_jwt(token: str) -> Dict[str, Any]:
         )
 
 
-def require_auth(roles: Optional[list[UserRoles]] = None):
+def require_auth(roles: Optional[List[UserRoles]] = None):
+    """Decorator to require authentication and optionally check roles"""
+
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
@@ -111,4 +113,3 @@ def require_auth(roles: Optional[list[UserRoles]] = None):
         return wrapper
 
     return decorator
-
