@@ -10,7 +10,6 @@ Base = declarative_base()
 
 
 class Database:
-
     def __init__(self):
         self.settings = get_settings()
         self.postgres = None
@@ -58,7 +57,9 @@ db = Database()
 
 
 async def get_db():
+    """Provide a database session"""
+    session = db.postgres()
     try:
-        yield db
+        yield session
     finally:
-        pass
+        session.close()

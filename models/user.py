@@ -7,6 +7,7 @@ from utils.common_mixin import CommonMixin
 
 class UserModel(Base, CommonMixin):
     """Postgres-backed User DB model."""
+
     __tablename__ = "users"
 
     first_name = Column(String, nullable=False)
@@ -24,11 +25,11 @@ class UserModel(Base, CommonMixin):
 
     # Relationships
     candidate = relationship(
-        "CandidateBase",  # The related model class name to establish relationship with CandidateBase
-        back_populates="user",  # Name of the reverse relationship attribute in CandidateBase that references this UserModel
-        uselist=False  # One-to-one relationship - a user has only one candidate profile
+        "CandidateModel",  # The related model class name to establish relationship with CandidateModel
+        back_populates="user",  # Name of the reverse relationship attribute in CandidateModel that references this UserModel
+        uselist=False,  # One-to-one relationship - a user has only one candidate profile
     )
     user_schedules = relationship(
         "UserScheduleModel",  # The related model class name to establish relationship with UserScheduleModel
-        back_populates="user"  # Name of the reverse relationship attribute in UserScheduleModel that references this UserModel
+        back_populates="user",  # Name of the reverse relationship attribute in UserScheduleModel that references this UserModel
     )

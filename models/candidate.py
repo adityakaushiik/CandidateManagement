@@ -6,10 +6,10 @@ from config.database import Base
 from utils.common_mixin import CommonMixin
 
 
-class CandidateBase(Base, CommonMixin):
+class CandidateModel(Base, CommonMixin):
     __tablename__ = "candidates"
 
-    user_id = Column(Integer, ForeignKey("users.id") , nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
 
     total_experience_years = Column(Float, nullable=False, server_default="0.0")
     preferred_locations = Column(JSONB, nullable=False, server_default="[]")
@@ -28,10 +28,10 @@ class CandidateBase(Base, CommonMixin):
     # Relationships
     user = relationship(
         "UserModel",  # The related model class name to establish relationship with UserModel
-        back_populates="candidate"  # Name of the reverse relationship attribute in UserModel that references this CandidateBase
+        back_populates="candidate",  # Name of the reverse relationship attribute in UserModel that references this CandidateModel
     )
     candidate_skills = relationship(
-        "CandidateSkill",  # The related model class name to establish relationship with CandidateSkill junction table
-        back_populates="candidate",  # Name of the reverse relationship attribute in CandidateSkill that references this CandidateBase
-        cascade="all, delete-orphan"  # Automatically delete all related candidate skills when candidate is deleted, and delete orphaned skills
+        "CandidateSkillModel",  # The related model class name to establish relationship with CandidateSkillModel junction table
+        back_populates="candidate",  # Name of the reverse relationship attribute in CandidateSkillModel that references this CandidateModel
+        cascade="all, delete-orphan",  # Automatically delete all related candidate skills when candidate is deleted, and delete orphaned skills
     )

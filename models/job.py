@@ -15,9 +15,15 @@ class JoiningTime(Enum):
 
 class JobModel(Base, CommonMixin):
     """Postgres-backed Job DB model."""
+
     __tablename__ = "jobs"
 
-    company_id = Column(Integer, ForeignKey("companies.id", ondelete="CASCADE"), nullable=False, index=True)
+    company_id = Column(
+        Integer,
+        ForeignKey("companies.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
     designation = Column(String(200), nullable=False)
     number_of_openings = Column(Integer, nullable=False, default=1)
     joining_time = Column(SAEnum(JoiningTime, name="joining_time_enum"), nullable=True)
@@ -26,12 +32,12 @@ class JobModel(Base, CommonMixin):
     # Relationships
     company = relationship(
         "CompanyModel",  # The related model class name to establish relationship with CompanyModel
-        back_populates="jobs"  # Name of the reverse relationship attribute in CompanyModel that references this JobModel
+        back_populates="jobs",  # Name of the reverse relationship attribute in CompanyModel that references this JobModel
     )
     user_schedules = relationship(
         "UserScheduleModel",  # The related model class name to establish relationship with UserScheduleModel
         back_populates="job",  # Name of the reverse relationship attribute in UserScheduleModel that references this JobModel
-        cascade="all, delete-orphan"  # Automatically delete all related user schedules when job is deleted, and delete orphaned schedules
+        cascade="all, delete-orphan",  # Automatically delete all related user schedules when job is deleted, and delete orphaned schedules
     )
 
     def __repr__(self) -> str:  # pragma: no cover - simple repr

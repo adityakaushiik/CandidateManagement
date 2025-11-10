@@ -5,7 +5,7 @@ from config.database import Base
 from utils.common_mixin import CommonMixin
 
 
-class Experience(Base, CommonMixin):
+class ExperienceModel(Base, CommonMixin):
     __tablename__ = "experiences"
 
     # replace PyObjectId with a SQL FK to companies (adjust table/name as needed)
@@ -17,5 +17,6 @@ class Experience(Base, CommonMixin):
 
     company = relationship(
         "CompanyModel",  # The related model class name to establish relationship with CompanyModel
-        lazy="joined"  # Load strategy - automatically loads related company data in the same query using JOIN
+        back_populates="experiences",  # Link to the reverse relationship in CompanyModel
+        lazy="joined",  # Load strategy - automatically loads related company data in the same query using JOIN
     )

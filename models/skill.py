@@ -7,6 +7,7 @@ from utils.common_mixin import CommonMixin
 
 class SkillModel(Base, CommonMixin):
     """Base model for Skill"""
+
     __tablename__ = "skills"
 
     name = Column(String(100), nullable=False, unique=True, index=True)
@@ -14,6 +15,6 @@ class SkillModel(Base, CommonMixin):
 
     # Relationships
     candidate_skills = relationship(
-        "CandidateSkill",  # The related model class name to establish relationship with CandidateSkill junction table
-        back_populates="skill"  # Name of the reverse relationship attribute in CandidateSkill that references this SkillModel
+        "CandidateSkillModel",  # The related model class name to establish relationship with CandidateSkillModel junction table
+        back_populates="skill",  # Name of the reverse relationship attribute in CandidateSkillModel that references this SkillModel
     )
